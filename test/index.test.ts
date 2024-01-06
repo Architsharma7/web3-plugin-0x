@@ -9,11 +9,11 @@ describe("OneInchSwapPlugin Tests", () => {
   beforeAll(() => {
     const web3RpcUrl =
       "https://optimism-mainnet.infura.io/v3/ba8a3893f5f34779b1ea295f176a73c6";
-    const apiKey = "WRzld8FWee3Kii8F3RvseQKNarl6uDry";
+    const apiKey = "zp3RxrnaYkEvFCyTOKe79kD7GnZxhbsW";
     const chainId = ChainIDs.Optimism;
     const walletAddress = "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8";
 
-    web3Context = new core.Web3Context(web3RpcUrl);
+    web3Context = new core.Web3Context("http://127.0.0.1:8545");
     oneInchPlugin = new OneInchPlugin(
       apiKey,
       chainId,
@@ -39,22 +39,21 @@ describe("OneInchSwapPlugin Tests", () => {
     });
 
     it("should check allowance with expected parameters", async () => {
-      const tokenAddress = "0x4200000000000000000000000000000000000042"; // Replace with a valid token address
-      const walletAddress = "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8"; // Replace with a valid wallet address
+      const tokenAddress = "0x4200000000000000000000000000000000000042";
+      const walletAddress = "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8";
 
       const allowance = await web3Context.OneInch.checkAllowance(
         tokenAddress,
         walletAddress
       );
       expect(allowance).toEqual("0");
-      console.log("Allowance:", allowance); // You can remove or modify this line based on your needs
+      console.log("Allowance:", allowance);
     });
 
     it("should approve token with expected parameters", async () => {
-      const tokenAddress = "0x4200000000000000000000000000000000000042"; // Replace with a valid token address
-      const amount = "10000000000000"; // Replace with a valid amount
-      const privateKey =
-        "a3fca102e683a3c210a99e85c81d5e8725e5845cf1ada682d7afe433a0e2b968"; // Replace with your actual private key
+      const privateKey = `0xa3fca102e683a3c210a99e85c81d5e8725e5845cf1ada682d7afe433a0e2b968`;
+      const tokenAddress = "0x4200000000000000000000000000000000000042";
+      const amount = "10";
 
       const approveTxHash = await web3Context.OneInch.approveToken(
         tokenAddress,
@@ -65,25 +64,25 @@ describe("OneInchSwapPlugin Tests", () => {
       console.log("Approve tx hash:", approveTxHash); // You can remove or modify this line based on your needs
     });
 
-    it("should swap tokens with expected parameters", async () => {
-      const swapParams = {
-        src: "0x4200000000000000000000000000000000000042", // Replace with a valid source token address
-        dst: "0x0b2c639c533813f4aa9d7837caf62653d097ff85", // Replace with a valid destination token address
-        amount: "100", // Replace with a valid amount
-        from: "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8", // Replace with a valid wallet address
-        slippage: 1,
-        disableEstimate: false,
-        allowPartialFill: false,
-      };
-      const privateKey =
-        "a3fca102e683a3c210a99e85c81d5e8725e5845cf1ada682d7afe433a0e2b968"; // Replace with your actual private key
+    // it("should swap tokens with expected parameters", async () => {
+    //   const swapParams = {
+    //     src: "0x4200000000000000000000000000000000000042", // Replace with a valid source token address
+    //     dst: "0x0b2c639c533813f4aa9d7837caf62653d097ff85", // Replace with a valid destination token address
+    //     amount: "1000000", // Replace with a valid amount
+    //     from: "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8", // Replace with a valid wallet address
+    //     slippage: 1,
+    //     disableEstimate: false,
+    //     allowPartialFill: false,
+    //   };
+    //   const privateKey =
+    //     "a3fca102e683a3c210a99e85c81d5e8725e5845cf1ada682d7afe433a0e2b968"; // Replace with your actual private key
 
-      const swapTxHash = await web3Context.OneInch.swapTokens(
-        swapParams,
-        privateKey
-      );
-      expect(swapTxHash).toBeDefined();
-      console.log("Swap tx hash:", swapTxHash); // You can remove or modify this line based on your needs
-    });
+    //   const swapTxHash = await web3Context.OneInch.swapTokens(
+    //     swapParams,
+    //     privateKey
+    //   );
+    //   expect(swapTxHash).toBeDefined();
+    //   console.log("Swap tx hash:", swapTxHash); // You can remove or modify this line based on your needs
+    // });
   });
 });

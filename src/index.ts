@@ -1,62 +1,76 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Web3PluginBase, Web3 } from "web3";
+import {  Web3, Web3PluginBase } from "web3";
 import { ChainIDs, SwapParams } from "./types";
 
-export class OneInchPlugin extends Web3PluginBase {
-  public pluginNamespace = "OneInch";
+export class OneInchPlugin extends Web3PluginBase{
+  public pluginNamespace = 'OneInch';
+
   private web3: any;
 
-  constructor(
+  public constructor(
     private apiKey: string,
     private chainId: ChainIDs,
     private web3RpcUrl: string,
     private walletAddress: string
   ) {
     super();
+    // // @ts-ignore
+    // this.apiKey = options?.apiKey;
+    // // @ts-ignore
+    // this.chainId = options?.chainId;
+    // // @ts-ignore
+    // this.web3RpcUrl = options?.web3RpcUrl;
+    // // @ts-ignore
+    // this.walletAddress = options?.walletAddress;
     this.web3 = new Web3(this.web3RpcUrl);
   }
 
-  private async apiRequest(url: string, method: string = "GET", body?: any): Promise<any> {
+  private async apiRequest(
+    url: string,
+    method: string = "GET",
+    body?: any
+  ): Promise<any> {
     const headers = {
       Authorization: `Bearer ${this.apiKey}`,
       "Content-Type": "application/json",
     };
-  
+
     const requestOptions: any = {
       method,
       headers,
     };
-  
+
     if (body) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       requestOptions.body = JSON.stringify(body);
     }
-  
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const response = await fetch(url, requestOptions);
-  
+    console.log("Response: ", response);
+
     if (!response.ok) {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       console.log(`API request failed with status ${response}`);
     }
-  
+
     // Check if the response body is empty
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const text = await response.text();
-    console.log("Response: ", text)
+    console.log("Response: ", text);
     if (!text) {
-      console.log(response)
+      console.log(response);
       throw new Error("Empty response from the server");
     }
-  
+
     try {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
       const responseBody = JSON.parse(text);
       console.log(responseBody);
       return responseBody;
-    } catch (error:any) {
+    } catch (error: any) {
       // Handle cases where JSON parsing fails
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
       throw new Error(`Failed to parse JSON response: ${error?.message}`);
@@ -65,12 +79,14 @@ export class OneInchPlugin extends Web3PluginBase {
 
   private async signAndSendTransaction(
     transaction: any,
+    // from: string,
     privateKey: string
   ): Promise<string> {
     // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     // const nonce = await this.web3.eth.getTransactionCount(this.walletAddress);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const { rawTransaction } = await this.web3.eth.accounts.signTransaction(
+      // from,
       transaction,
       privateKey
     );
@@ -107,8 +123,20 @@ export class OneInchPlugin extends Web3PluginBase {
   ): Promise<string> {
     const url = `https://api.1inch.dev/swap/v5.2/${this.chainId}/approve/transaction?tokenAddress=${tokenAddress}&amount=${amount}`;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const transaction = await this.apiRequest(url, "POST");
-    console.log("Token Approval Transaction: ", transaction)
+    // const transaction = await this.apiRequest(url);
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        accept: "application/json",
+      },
+    };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const transaction = await fetch(url, headers);
+    console.log("Token Approval Transaction: ", transaction);
+
+    if (transaction == null || undefined) {
+      console.log("Transaction is null or undefined");
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const gasLimit = await this.web3.eth.estimateGas({
@@ -124,10 +152,12 @@ export class OneInchPlugin extends Web3PluginBase {
     };
 
     const approveTxHash = await this.signAndSendTransaction(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       approvedTransaction,
+      // this.walletAddress,
       privateKey
     );
-    console.log("Approve tx hash: ", approveTxHash)
+    console.log("Approve tx hash: ", approveTxHash);
     return approveTxHash;
   }
 
@@ -143,12 +173,13 @@ export class OneInchPlugin extends Web3PluginBase {
       .then((res: any) => res.tx);
 
     const swapTxHash = await this.signAndSendTransaction(
+      // this.walletAddress,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       swapTransaction,
       privateKey
     );
     return swapTxHash;
   }
-
 }
 
 // Module Augmentation

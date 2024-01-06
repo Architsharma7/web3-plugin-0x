@@ -1,12 +1,12 @@
 {
-  "name": "web3-plugin-template",
+  "name": "web3-plugin-1inch",
   "version": "1.0.0",
-  "description": "Template plugin to extend web3.js with additional methods",
+  "description": "Plugin that adds Aggregated Swap functionality using 1inch Network",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "homepage": "https://github.com/web3/web3.js-plugin-template#readme",
+  "homepage": "https://github.com/Architsharma7/web3-plugin-1inch#readme",
   "bugs": {
-    "url": "https://github.com/web3/web3.js-plugin-template/issues"
+    "url": "https://github.com/Architsharma7/web3-plugin-1inch/issues"
   },
   "scripts": {
     "lint": "eslint '{src,test}/**/*.ts'",
@@ -14,15 +14,14 @@
     "test": "jest --config=./test/jest.config.js"
   },
   "contributors": [
-    "ChainSafe <info@chainsafe.io>"
+    "Archit Sharma"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:web3/web3.js-plugin-template.git"
+    "url": "https://github.com/Architsharma7/web3-plugin-1inch"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@chainsafe/eslint-config": "^2.0.0",
     "@types/jest": "^29.5.2",
