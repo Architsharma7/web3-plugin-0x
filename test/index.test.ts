@@ -9,7 +9,7 @@ describe("OneInchSwapPlugin Tests", () => {
   beforeAll(() => {
     const web3RpcUrl =
       "https://optimism-mainnet.infura.io/v3/ba8a3893f5f34779b1ea295f176a73c6";
-    const apiKey = "zp3RxrnaYkEvFCyTOKe79kD7GnZxhbsW";
+    const apiKey = "UYOgFuneGdMBzgN1m2Fl4o2Pswc8WHwX";
     const chainId = ChainIDs.Optimism;
     const walletAddress = "0x41D22F2e55BD7B6bbb16f82e852a58c36C5D5Cf8";
 

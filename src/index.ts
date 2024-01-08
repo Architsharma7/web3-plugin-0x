@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {  Web3, Web3PluginBase } from "web3";
+import { Web3, Web3PluginBase } from "web3";
 import { ChainIDs, SwapParams } from "./types";
 
-export class OneInchPlugin extends Web3PluginBase{
-  public pluginNamespace = 'OneInch';
+export class OneInchPlugin extends Web3PluginBase {
+  public pluginNamespace = "OneInch";
 
   private web3: any;
 
@@ -71,7 +71,6 @@ export class OneInchPlugin extends Web3PluginBase{
       console.log(responseBody);
       return responseBody;
     } catch (error: any) {
-      // Handle cases where JSON parsing fails
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
       throw new Error(`Failed to parse JSON response: ${error?.message}`);
     }
@@ -82,13 +81,11 @@ export class OneInchPlugin extends Web3PluginBase{
     // from: string,
     privateKey: string
   ): Promise<string> {
-    // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    // const nonce = await this.web3.eth.getTransactionCount(this.walletAddress);
+    console.log(transaction);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const { rawTransaction } = await this.web3.eth.accounts.signTransaction(
-      // from,
       transaction,
-      privateKey
+      privateKey,
     );
 
     return await this.broadCastRawTransaction(rawTransaction);
@@ -123,7 +120,6 @@ export class OneInchPlugin extends Web3PluginBase{
   ): Promise<string> {
     const url = `https://api.1inch.dev/swap/v5.2/${this.chainId}/approve/transaction?tokenAddress=${tokenAddress}&amount=${amount}`;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // const transaction = await this.apiRequest(url);
     const headers = {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
@@ -154,7 +150,6 @@ export class OneInchPlugin extends Web3PluginBase{
     const approveTxHash = await this.signAndSendTransaction(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       approvedTransaction,
-      // this.walletAddress,
       privateKey
     );
     console.log("Approve tx hash: ", approveTxHash);
@@ -173,7 +168,6 @@ export class OneInchPlugin extends Web3PluginBase{
       .then((res: any) => res.tx);
 
     const swapTxHash = await this.signAndSendTransaction(
-      // this.walletAddress,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       swapTransaction,
       privateKey
