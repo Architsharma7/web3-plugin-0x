@@ -25,12 +25,13 @@ export class ZeroXSwapPlugin extends Web3PluginBase {
     apiKey: string,
     defaultParams: SwapParams,
     takerPrivateKey: string,
-    chain: Chains
+    chain: Chains,
+    web3rpcurl: string
   ) {
     super();
     this.apiKey = apiKey;
     this.defaultParams = defaultParams;
-    this.web3 = new Web3();
+    this.web3 = new Web3(web3rpcurl);
     this.takerPrivateKey = takerPrivateKey;
     this.chain = chain;
   }
