@@ -1,24 +1,82 @@
-web3-plugin-template
+web3-plugin-0x
 ===========
+[![npm version](https://img.shields.io/badge/npm-0.1.0-brightgreen)](www.npmjs.com/package/web3-plugin-0x)
 
-This is a template for creating a repository for web3.js plugin.
+A plugin that adds Aggregated Swap functionality using 0x Aggregated Network
+
+Prerequisites
+===========
+- [NodeJS](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/)
+
+Installation
+===========
+> Note: Make sure you are using `web3` version 4.0.3 or higher in your project.
+
+```bash
+npm i web3-plugin-0x --save
+```
 
 How to use
 ------------
+> Disclaimer: These methods are only for ERC20 tokens.
 
-1. Create your project out of this template.
+1. Initialize the taker address (The address which will fill the quote.)
 
-    You can do so by pressing on `Use this template` on the above right corner and then select `Create new Repositor`. Please, use the convention `web3-plugin-<name>` for your repo name.
-2. Update the `name` and `description` fileds at your `package.json`.
+```
+import {Chains} from "@web3-plugin-0x";
+import {ZeroXSwapPlugin} from "@web3-plugin-0x";
 
-    Chose a name like: `@<organization>/web3-plugin-<name>` (or the less better `web3-plugin-<name>`).
-3. Update the code inside `src` folder.
+const web3rpcurl = "any_rpc_url_for_the_chain";
+const web3 = new Web3(web3rpcurl);
+const takerPrivateKey = "0x..."; // Replace with the actual private key
 
-4. Modify and add tests inside `test` folder.
+const wallet = web3.eth.accounts.wallet.add(takerPrivateKey);
+const takerAddress = wallet[0].address;
+  ```
 
-5. Publish to the npm registry.
+2. Construct the swap parameters and Initialize the plugin
+> Note: Get your API key from here: https://dashboard.0x.org
+```
+const apiKey = "your_api_key";
 
-    You can publish with something like: `yarn build && npm publish --access public`.
+const defaultParams = {
+  sellToken: "token_address_1",
+  buyToken: "token_address_2",
+  sellAmount: "1000000000000000000", // 1 ETH in wei
+  takerAddress : takerAddress,
+};
+
+const chain = Chains.PolygonMumbai;
+
+web3.registerPlugin(new ZeroXSwapPlugin(
+        apiKey,
+        defaultParams,
+        takerPrivateKey,
+        chain,
+        web3rpcurl)
+);
+```
+
+3. Get the price for the selected tokens.
+
+ > Note: New defaultParams can be set in any function, they will simply override the values of the previously defined parameters. If not provided, the functions will still work with old parameters.
+ 
+```
+ web3.zeroXSwap.getPrice(paramters:optional);
+ ```
+
+4. Allow 0x to move your tokens.
+
+```
+web3.zeroXSwap.tokenAllowance(paramters:optional);
+```
+
+5. Swapping Tokens
+
+```
+web3.zeroXSwap.swap(paramters:optional);
+```
 
 Contributing
 ------------
