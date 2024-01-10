@@ -60,17 +60,24 @@ export class ZeroXSwapPlugin extends Web3PluginBase {
       sellAmount: string;
       takerAddress: string;
     }> = {}
-  ): Promise<void> {
+  ): Promise<string> {
     const params = { ...this.defaultParams, ...overrideParams };
+    const headers = { "0x-api-key": this.apiKey };
     const res = await fetch(
-      `https://${this.chain}api.0x.org/swap/v1/quote?${qs.stringify(params)}`
+      `https://${this.chain}api.0x.org/swap/v1/quote?${qs.stringify(params)}`,
+      { headers }
     );
     const quote = await res.json();
 
     const tokenContract = new ERC20TokenContract(
       params.sellToken,
-      this.web3.currentProvider
+      this.web3.eth.currentProvider
     );
+
+    // const price = await this.getPrice();
+    // const gasfees = price.gasPrice * price.gas;
+    // const maxApproval = new BigNumber(params.sellAmount).plus(gasfees);
+
     const maxApproval = new BigNumber(2).pow(256).minus(1);
 
     const approvalTxData = tokenContract
@@ -84,6 +91,7 @@ export class ZeroXSwapPlugin extends Web3PluginBase {
     });
 
     console.log(txdata);
+    return txdata;
   }
 
   public async getPrice(
