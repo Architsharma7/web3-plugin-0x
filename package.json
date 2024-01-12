@@ -1,6 +1,6 @@
 {
   "name": "web3-plugin-0x",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Plugin that adds Aggregated Swap functionality using 0x Aggregated Network",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
