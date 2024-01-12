@@ -11,7 +11,21 @@ import { ERC20TokenContract } from "@0x/contract-wrappers";
 import { BigNumber } from "@0x/utils";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import qs from "qs";
-import { Chains, SwapParams } from "./types";
+import { SwapParams } from "./types";
+
+export enum Chains {
+  Ethereum = "",
+  Sepolia = "sepolia.",
+  Polygon = "polygon.",
+  PolygonMumbai = "mumbai.",
+  Binance = "bsc.",
+  Optimism = "optimism.",
+  Fantom = "fantom.",
+  Celo = "celo.",
+  Avalanche = "avalanche.",
+  Arbitrum = "arbitrum.",
+  Base = "base.",
+}
 
 export class ZeroXSwapPlugin extends Web3PluginBase {
   public pluginNamespace = "zeroXSwap";
