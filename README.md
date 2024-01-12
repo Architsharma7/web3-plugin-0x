@@ -24,8 +24,8 @@ How to use
 1. Initialize the taker address (The address which will fill the quote.)
 
 ```
-import {Chains} from "@web3-plugin-0x";
-import {ZeroXSwapPlugin} from "@web3-plugin-0x";
+import { Chains } from "web3-plugin-0x/lib/types";
+import {ZeroXSwapPlugin} from "web3-plugin-0x";
 
 const web3rpcurl = "any_rpc_url_for_the_chain";
 const web3 = new Web3(web3rpcurl);
